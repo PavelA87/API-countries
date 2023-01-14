@@ -1,18 +1,33 @@
 package by.pavelaponik.api;
-
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
+import java.util.Arrays;
 
-import static io.restassured.RestAssured.given;
 
 public class CountriesAPI {
 
+    final static String BASE_URL = "https://restcountries.com";
+    final static String GET_BORDERS_END_POINT = "/v2/alpha";
+    String countryName = "RUS";
+    ArrayList borders;
+
+    public static ArrayList getCountryBorders(Object country) {
+
+        ArrayList bordersList = Requests.sendGetRequestForSpecificCountry(BASE_URL+ GET_BORDERS_END_POINT, country).get("borders");
+        return (ArrayList) bordersList.get(0);
+
+    }
+
     @Test
-    public void testGetInformationAboutCountryRus() {
+    public void testGetInformationAboutCountryBorders() {
 
-        String endPoint = "https://restcountries.com/v2/alpha";
+        borders = getCountryBorders(countryName);
 
-        given().queryParams("codes", "RUS").when().get(endPoint)
-                .then().log().body();
-
+        for (Object country: borders)
+        {
+            ArrayList countryBorders = getCountryBorders(country.toString());
+            Assertions.assertTrue(Arrays.asList(countryBorders).toString().contains(countryName));
+        }
     }
 }
