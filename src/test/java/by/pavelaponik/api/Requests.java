@@ -8,6 +8,5 @@ public class Requests {
 
         JsonPath response = given().queryParams("codes", country).when().get(endPoint).then().extract().response().jsonPath();
         return response;
-
     }
 }
